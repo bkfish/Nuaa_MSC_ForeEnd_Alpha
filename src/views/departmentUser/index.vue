@@ -6,8 +6,12 @@
     </div>
     <el-table v-loading="listLoading" :data="list" border fit>
       <el-table-column prop="id" label="id" width="40" align="center"/>
-      <el-table-column prop="name" label="部门名字" align="center"/>
-      <el-table-column prop="extension" label="部门描述" align="center"/>
+      <el-table-column prop="userId" label="userId" align="center"/>
+      <el-table-column prop="realName" label="人员名称" align="center"/>
+      <el-table-column prop="departmentId" label="departmentId" align="center"/>
+      <el-table-column prop="departmentName" label="部门名称" align="center"/>
+      <el-table-column prop="role" label="担任职位" align="center"/>
+      
       <el-table-column label="操作" align="center" width="200">
         <template slot-scope="scope">
           <el-button type="primary" @click="handleUpdate(scope.row)">编辑</el-button>
@@ -18,13 +22,41 @@
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogTitle" width="600px">
       <el-form ref="departmentForm" :model="temp" :rules="departmentRules" label-width="100px" style="width: 400px" label-position="left">
-        <el-form-item label="部门名字" prop="name">
-          <el-input v-model="temp.name" placeholder="姓名"/>
-        </el-form-item>
+        
+    
+      <el-form-item label="人员选择" prop="userId" placeholder="人员选择">
+          <el-select v-model="temp.userId">
+            
+          <el-option
+          v-for="item in userList" 
+          :key="item.id" 
+          :label="item.realName" 
+          :value="item.id"
+          >
+          </el-option>
 
-        <el-form-item label="部门描述" prop="extension">
-          <el-input v-model="temp.extension" placeholder="部门描述"/>
-        </el-form-item>
+          </el-select>
+      </el-form-item>
+
+
+        <el-form-item label="部门选择" prop="departmentId" placeholder="部门选择">
+          <el-select v-model="temp.departmentId">
+  
+          <el-option
+          v-for="item in departmentList" 
+          :key="item.id" 
+          :label="item.name" 
+          :value="item.id"
+          >
+          </el-option>
+
+          </el-select>
+        </el-form-item> 
+
+        <el-form-item label="担任职位" prop="role">
+          <el-input v-model="temp.role" placeholder="担任职位"/>
+        </el-form-item> 
+       
 
       </el-form>
       <div style="text-align: right;">
@@ -36,25 +68,33 @@
         </el-button>
       </div>
     </el-dialog>
+  
+
+
   </div>
+  
 </template>
 
 <script>
-import { getList, updateDepartment, createDepartment, deleteDepartment } from '@/api/tree'
+import { getList, updateDepartment, createDepartment, deleteDepartment } from '@/api/departmentUser'
+import {getUsersList} from '@/api/table'
+import {getDepartmentList} from '@/api/tree'
 
 export default {
   // name: 'table',
-  props: {
-    id: 0
-  },
   data() {
     return {
       temp: {
         id: undefined,
         name: '',
-        extension: ''
+        extension: '',
+        role:'',
+        userId:undefined,
+        departmentId:undefined
       },
       list: null,
+      userList: null,
+      departmentList: null,
       dialogVisible: false,
       dialogTitle: '编辑',
       dialogType: 'edit',
@@ -67,6 +107,43 @@ export default {
   },
   created() {
     this.initData()
+      
+     getUsersList({ page: 1, size: 1000 }).then(res => {
+      const data1 = res.list
+      data1.forEach((value, index) => {
+        for (const key in value) {
+          if (!value.hasOwnProperty(key)) {
+            continue
+          }
+          if (value[key] === 'string' || value[key] === null) {
+            value[key] = '未知'
+          }
+        }
+      })
+      this.userList = data1
+      console.log(userList)
+      }).catch(res => {
+        // console.error(res)
+      })
+
+      getDepartmentList({ page: 1, size: 1000 }).then(res => {
+      const data2 = res.list
+      data2.forEach((value, index) => {
+        for (const key in value) {
+          if (!value.hasOwnProperty(key)) {
+            continue
+          }
+          if (value[key] === 'string' || value[key] === null) {
+            value[key] = '未知'
+          }
+        }
+      })
+      this.departmentList = data2
+      console.log(departmentList)
+      }).catch(res => {
+        // console.error(res)
+      })
+
   },
   methods: {
     initData() {
@@ -83,11 +160,13 @@ export default {
             }
           }
         })
+        console.log(data)
         this.list = data
         this.listLoading = false
       }).catch(res => {
         // console.error(res)
       })
+    
     },
     resetTemp() {
       this.temp = {
@@ -118,11 +197,12 @@ export default {
           } else {
             this.dialogVisible = false
             this.$notify({
-              title: '失败',
+              title: '成功',
               message: res.error,
-              type: 'error'
+              type: 'success'
             })
           }
+          location.reload()
         })
       }).catch(valid => {
         // valid failed
@@ -147,11 +227,12 @@ export default {
           } else {
             this.dialogVisible = false
             this.$notify({
-              title: '失败',
+              title: '成功',
               message: res.error,
-              type: 'error'
+              type: 'success'
             })
           }
+          location.reload()
         })
       })
     },
@@ -161,7 +242,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        deleteDepartment({ 'departmentId': row.id }).then(res => {
+        deleteDepartment({ 'departmentUserId': row.id }).then(res => {
           if (res.status) {
             const index = this.list.indexOf(row)
             this.list.splice(index, 1)
@@ -172,11 +253,12 @@ export default {
             })
           } else {
             this.$notify({
-              title: '失败',
+              title: '成功',
               message: res.error,
               type: 'error'
             })
           }
+          location.reload()
         })
       }).catch(() => {
         this.$notify({
@@ -185,6 +267,7 @@ export default {
         })
       })
     }
+    
   }
 }
 </script>

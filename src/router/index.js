@@ -58,7 +58,13 @@ export const constantRouterMap = [
         name: 'Tree',
         component: () => import('@/views/tree/index'),
         meta: { title: '部门管理', icon: 'tree' }
-      }
+      },
+      {
+        path: 'relate',
+        name: 'relate',
+        component: () => import('@/views/departmentUser/index'),
+        meta: { title: '人员部门关系管理', icon: 'tree' }
+      },
     ]
   },
   {

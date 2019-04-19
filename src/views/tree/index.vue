@@ -10,7 +10,6 @@
       <el-table-column prop="extension" label="部门描述" align="center"/>
       <el-table-column label="操作" align="center" width="500">
         <template slot-scope="scope">
-          <el-button type="success" @click="redictToDepartmentUser(scope.row)">该部门人员管理</el-button>
           <el-button type="primary" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
@@ -18,9 +17,11 @@
     </el-table>
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogTitle" width="600px">
+      
       <el-form ref="departmentForm" :model="temp" :rules="departmentRules" label-width="100px" style="width: 400px" label-position="left">
+        
         <el-form-item label="部门名字" prop="name">
-          <el-input v-model="temp.name" placeholder="姓名"/>
+          <el-input v-model="temp.name" placeholder="部门名字"/>
         </el-form-item>
 
         <el-form-item label="部门描述" prop="extension">
@@ -28,6 +29,7 @@
         </el-form-item>
 
       </el-form>
+
       <div style="text-align: right;">
         <el-button @click="dialogVisible = false">
           取消
@@ -36,12 +38,13 @@
           确定
         </el-button>
       </div>
+
     </el-dialog>
   </div>
 </template>
 
 <script>
-import { getList, updateDepartment, createDepartment, deleteDepartment } from '@/api/tree'
+import { getDepartmentList, updateDepartment, createDepartment, deleteDepartment } from '@/api/tree'
 
 export default {
   // name: 'table',
@@ -69,7 +72,7 @@ export default {
   methods: {
     initData() {
       this.listLoading = true
-      getList({ page: 1, size: 1000 }).then(res => {
+      getDepartmentList({ page: 1, size: 1000 }).then(res => {
         const data = res.list
         data.forEach((value, index) => {
           for (const key in value) {
@@ -182,9 +185,6 @@ export default {
           type: 'success'
         })
       })
-    },
-    redictToDepartmentUser(row) {
-      this.$router.push({ name: 'departmentUser', params: { id: row.id }})
     }
   }
 }

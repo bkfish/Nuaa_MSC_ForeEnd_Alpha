@@ -10,6 +10,7 @@
       <el-table-column prop="summary" label="概要" align="center"/>
       <el-table-column prop="cover" label="封面url" align="center"/>
       <el-table-column prop="auther" label="作者" align="center"/>
+      <el-table-column prop="location" label="地点" align="center"/>
        <el-table-column prop="participants" label="参与者" align="center"/>
       <el-table-column prop="time" label="发布时间" align="center"/>
       <el-table-column label="操作" align="center" width="300">
@@ -31,6 +32,13 @@
         <el-form-item label="封面url" prop="cover">
           <el-input v-model="temp.cover" placeholder="封面url"/>
         </el-form-item>
+        <el-form-item label="地点" prop="location">
+          <el-input v-model="temp.location" placeholder="地点"/>
+        </el-form-item>
+        <el-form-item label="参与者" prop="participants">
+          <el-input v-model="temp.participants" placeholder="参与者"/>
+        </el-form-item>
+
         <el-form-item label="作者" prop="auther">
           <el-input v-model="temp.auther" placeholder="作者"/>
         </el-form-item>
@@ -46,7 +54,19 @@
         <el-form-item label="内容" prop="content">
           <el-input v-model="temp.content" placeholder="内容"/>
         </el-form-item>
+        <el-form-item label="撰写人" prop="userId" placeholder="撰写人">
+          <el-select v-model="temp.userId">
+            
+          <el-option
+          v-for="item in userList" 
+          :key="item.id" 
+          :label="item.realName" 
+          :value="item.id"
+          >
+          </el-option>
 
+          </el-select>
+      </el-form-item>
 
       </el-form>
       <div style="text-align: right;">
@@ -63,6 +83,7 @@
 
 <script>
 import { getList, updateNotification, createNotification, deleteNotification } from '@/api/notification'
+import {getUsersList} from '@/api/table'
 
 export default {
   // name: 'table',
@@ -74,6 +95,7 @@ export default {
         extension: ''
       },
       list: null,
+      userList: null,
       dialogVisible: false,
       dialogTitle: '编辑',
       dialogType: 'edit',
@@ -86,6 +108,23 @@ export default {
   },
   created() {
     this.initData()
+        getUsersList({ page: 1, size: 1000 }).then(res => {
+      const data1 = res.list
+      data1.forEach((value, index) => {
+        for (const key in value) {
+          if (!value.hasOwnProperty(key)) {
+            continue
+          }
+          if (value[key] === 'string' || value[key] === null) {
+            value[key] = '未知'
+          }
+        }
+      })
+      this.userList = data1
+      console.log(userList)
+      }).catch(res => {
+        // console.error(res)
+      })
   },
   methods: {
     initData() {
@@ -137,7 +176,7 @@ export default {
           } else {
             this.dialogVisible = false
             this.$notify({
-              title: '删除成功',
+              title: '更新成功',
               message: res.error,
               type: 'success'
             })

@@ -81,7 +81,7 @@
 </template>
 
 <script>
-import { getList, updateUser, createUser, deleteUser } from '@/api/table'
+import { getUsersList, updateUser, createUser, deleteUser } from '@/api/table'
 
 export default {
   // name: 'table',
@@ -124,7 +124,8 @@ export default {
   methods: {
     initData() {
       this.listLoading = true
-      getList({ page: 1, size: 1000 }).then(res => {
+
+      getUsersList({ page: 1, size: 1000 }).then(res => {
         const data = res.list
         data.forEach((value, index) => {
           for (const key in value) {

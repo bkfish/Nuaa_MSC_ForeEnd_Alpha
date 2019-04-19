@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function getList(params) {
+export function getUsersList(params) {
   return request({
     url: 'http://106.15.177.94:5000/user/listAll',
     method: 'get',
