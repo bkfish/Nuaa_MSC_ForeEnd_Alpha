@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
+import { isvalidUsername,isvalidPassword } from '@/utils/validate'
 
 export default {
   name: 'Login',
@@ -46,16 +46,16 @@ export default {
       }
     }
     const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
+      if (!isvalidPassword(value)) {
+        callback(new Error('密码错误'))
       } else {
         callback()
       }
     }
     return {
       loginForm: {
-        username: 'admin',
-        password: '123qwe'
+        username: '',
+        password: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
