@@ -83,7 +83,7 @@ export default {
               value[key] = '未知'
             }
           }
-        })
+        }) 
         this.list = data
         this.listLoading = false
       }).catch(res => {

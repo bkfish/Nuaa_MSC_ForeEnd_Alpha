@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getDepartmentList(params) {
   return request({
-    url: 'http://106.15.177.94:5000/department/listAll',
+    url: 'http://localhost:5000/department/listAll',
     method: 'get',
     params
   })
@@ -10,7 +10,7 @@ export function getDepartmentList(params) {
 
 export function updateDepartment(data) {
   return request({
-    url: 'http://106.15.177.94:5000/department/update',
+    url: 'http://localhost:5000/department/update',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function updateDepartment(data) {
 
 export function createDepartment(data) {
   return request({
-    url: 'http://106.15.177.94:5000/department/insert',
+    url: 'http://localhost:5000/department/insert',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createDepartment(data) {
 
 export function deleteDepartment(params) {
   return request({
-    url: 'http://106.15.177.94:5000/department/removeById',
+    url: 'http://localhost:5000/department/removeById',
     method: 'delete',
     params
   })

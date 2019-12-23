@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getList(params) {
   return request({
-    url: 'http://106.15.177.94:5000/notification/listAll',
+    url: 'http://localhost:5000/notification/listAll',
     method: 'get',
     params
   })
@@ -10,7 +10,7 @@ export function getList(params) {
 
 export function updateNotification(data) {
   return request({
-    url: 'http://106.15.177.94:5000/notification/update',
+    url: 'http://localhost:5000/notification/update',
     method: 'post',
     data
   })
@@ -18,7 +18,7 @@ export function updateNotification(data) {
 
 export function createNotification(data) {
   return request({
-    url: 'http://106.15.177.94:5000/notification/insert',
+    url: 'http://localhost:5000/notification/insert',
     method: 'post',
     data
   })
@@ -26,7 +26,7 @@ export function createNotification(data) {
 
 export function deleteNotification(params) {
   return request({
-    url: 'http://106.15.177.94:5000/notification/removeById',
+    url: 'http://localhost:5000/notification/removeById',
     method: 'delete',
     params
   })
